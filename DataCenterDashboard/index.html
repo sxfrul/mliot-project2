@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ML-IoT Cyber-Physical Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#0b0f19] text-gray-200 font-sans h-screen flex flex-col overflow-hidden antialiased selection:bg-indigo-500/20">
+
+  <header class="glass-panel border-b border-white/5 px-8 py-4 flex justify-between items-center z-10 relative">
+    <div>
+      <h1 class="text-xl font-bold tracking-tight text-white">ML-IOT :: INTELLIGENT DATA CENTER AI DASHBOARD</h1>
+      <p class="text-[10px] text-gray-400 uppercase tracking-widest font-medium">Autonomous Environment Balance Engine</p>
+    </div>
+    
+    <div class="flex items-center space-x-4 text-[11px] font-mono text-gray-400">
+      <div>UPTIME: <span id="system-uptime" class="text-indigo-400 font-semibold">00:00:00</span></div>
+      <div class="h-3 w-[1px] bg-gray-700"></div>
+      <div>STREAM: <span id="packet-counter" class="text-emerald-400 font-semibold">0</span> rx</div>
+      <div class="h-3 w-[1px] bg-gray-700"></div>
+      <div>STATUS: <span id="conn-text" class="text-rose-400 font-semibold uppercase">OFFLINE</span></div>
+    </div>
+  </header>
+
+  <main class="flex-1 p-4 grid grid-cols-12 gap-4 overflow-hidden relative pb-16">
+    <div class="col-span-9 flex flex-col gap-4 overflow-hidden">
+      
+      <section class="grid grid-cols-3 gap-4 h-1/4">
+        <div class="flex flex-col h-full justify-end">
+          <span class="card-label">Temperature Sensor</span>
+          <div id="card-temp-box" class="dashboard-card border border-white/5 p-6 rounded-lg flex-1 flex items-center justify-between relative overflow-hidden">
+            <div class="flex items-baseline z-10">
+              <span id="text-temp" class="text-5xl font-bold tracking-tight text-white">--</span>
+              <span class="text-sm font-semibold text-gray-400 ml-2">°C</span>
+            </div>
+            <div id="mark-temp" class="card-watermark">TMP</div>
+          </div>
+        </div>
+
+        <div class="flex flex-col h-full justify-end">
+          <span class="card-label">Humidity Sensor</span>
+          <div id="card-hum-box" class="dashboard-card border border-white/5 p-6 rounded-lg flex-1 flex items-center justify-between relative overflow-hidden">
+            <div class="flex items-baseline z-10">
+              <span id="text-hum" class="text-5xl font-bold tracking-tight text-white">--</span>
+              <span class="text-xl font-bold text-gray-500 ml-2">%</span>
+            </div>
+            <div id="mark-hum" class="card-watermark">HYG</div>
+          </div>
+        </div>
+
+        <div class="flex flex-col h-full justify-end">
+          <span class="card-label">Smoke Sensor</span>
+          <div id="card-smoke" class="dashboard-card border border-white/5 p-6 rounded-lg flex-1 flex items-center justify-between relative overflow-hidden">
+            <span id="text-smoke" class="text-xl font-bold tracking-wider text-gray-400 transition-all duration-300 z-10">WAITING</span>
+            <div id="mark-smoke" class="card-watermark watermark-safe-green">SMK</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid grid-cols-2 gap-4 h-[18%]">
+        <div class="flex flex-col h-full justify-end">
+          <span class="card-label">Traditional Air Fan (PUE Protocol)</span>
+          <div id="act-fan" class="dashboard-card border border-white/5 px-6 rounded-lg flex-1 flex items-center justify-between transition-all duration-300">
+            <div class="flex flex-col">
+              <h3 class="font-semibold text-sm uppercase tracking-tight text-gray-200">Air Cooling State</h3>
+              <p class="text-[10px] text-gray-400 font-mono">ID: HVAC-VENT-01</p>
+            </div>
+            <span id="badge-fan" class="actuator-badge badge-off text-xs px-4 py-1.5 font-medium tracking-wide">OFF</span>
+          </div>
+        </div>
+
+        <div class="flex flex-col h-full justify-end">
+          <span class="card-label">Evaporative CoolLED (WUE Protocol)</span>
+          <div id="act-cool" class="dashboard-card border border-white/5 px-6 rounded-lg flex-1 flex items-center justify-between transition-all duration-300">
+            <div class="flex flex-col">
+              <h3 class="font-semibold text-sm uppercase tracking-tight text-gray-200">Water Cooling State</h3>
+              <p class="text-[10px] text-gray-400 font-mono">ID: PUMP-EVAL-02</p>
+            </div>
+            <span id="badge-cool" class="actuator-badge badge-off text-xs px-4 py-1.5 font-medium tracking-wide">OFF</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="flex flex-col flex-1 min-h-0">
+        <span class="card-label">Telemetry Waveform Real-Time Stream</span>
+        <section class="dashboard-card border border-white/5 p-4 rounded-lg flex-1 relative min-h-0">
+          <canvas id="historyChart"></canvas>
+        </section>
+      </div>
+    </div>
+
+    <div class="col-span-3 flex flex-col gap-4 overflow-hidden">
+      <div class="flex flex-col">
+        <span class="sidebar-label text-indigo-400 mb-1.5">Internal Simulator</span>
+        <section class="dashboard-card border border-white/5 p-4 rounded-lg flex flex-col justify-center">
+          <button id="btn-fake" class="w-full btn-gradient bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 rounded text-xs font-semibold tracking-wider transition-colors">
+              Start Simulation Stream
+          </button>
+        </section>
+      </div>
+
+      <div class="flex flex-col">
+        <span class="sidebar-label text-gray-400 mb-1.5">Network Pipeline</span>
+        <section class="dashboard-card border border-white/5 p-4 rounded-lg flex flex-col gap-2.5">
+          <button id="btn-toggle" class="btn-cyber text-xs border border-white/10 hover:bg-white/5 text-gray-300 py-2.5 rounded font-semibold tracking-wider transition-colors">
+            <span>ESTABLISH MQTT LINK</span>
+          </button>
+          <button id="btn-view-logs" class="btn-cyber text-xs border border-emerald-500/20 hover:bg-emerald-500/10 text-emerald-400 py-2.5 rounded font-semibold tracking-wider transition-colors">
+            VIEW SAVED LOG FILE
+          </button>
+        </section>
+      </div>
+
+      <div class="flex flex-col flex-1 min-h-0">
+        <span class="sidebar-label text-gray-400 mb-1.5">Live Feed Matrix</span>
+        <section class="dashboard-card border border-white/5 p-3 rounded-lg flex flex-col flex-1 min-h-0 bg-black/10">
+          <div id="feed-log" class="flex-1 text-[10px] font-mono p-3 rounded overflow-y-auto text-gray-400 space-y-2 bg-gray-950/40 border border-white/[0.02] custom-scrollbar">
+            <div class="text-gray-500 italic">// Matrix pipeline ready. Direct telemetry link required...</div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <footer class="absolute bottom-0 left-0 w-full bg-[#070a12]/90 border-t border-white/5 px-8 py-3 flex justify-end items-center text-xs font-mono tracking-wider z-30">
+      <div class="flex items-center space-x-4 text-gray-300 font-bold">
+        <div class="text-gray-500 font-semibold text-[11px] tracking-wide uppercase">SYSTEM DEVELOPMENT COHORT:</div>
+        <div class="flex items-center space-x-2">
+          <span class="text-indigo-400 font-semibold">Muhammad Safrul</span> 
+          <span class="text-[9px] px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-300 font-semibold uppercase">Leader</span>
+        </div>
+        <div class="text-gray-700">|</div>
+        <div>Cheng Hao Wen</div>
+        <div class="text-gray-700">|</div>
+        <div>Jagadesh</div>
+        <div class="text-gray-700">|</div>
+        <div>Ryan Ang</div>
+        <div class="text-gray-700">|</div>
+        <div>Laila Suhaila</div>
+        <div class="text-gray-700">|</div>
+        <div>Muhammad Iman Hakimi</div>
+      </div>
+    </footer>
+  </main>
+
+  <div id="log-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/70 backdrop-blur-sm transition-all opacity-0 duration-300">
+    <div class="w-full max-w-4xl max-h-[85vh] flex flex-col dashboard-card border border-white/10 rounded-lg overflow-hidden relative bg-[#0e1322]">
+      <div class="px-6 py-4 border-b border-white/5 flex justify-between items-center bg-gray-900/40">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-gray-300">System Asset: log.csv</h2>
+        <button id="btn-close-modal" class="text-gray-500 hover:text-white font-bold text-lg p-1 transition-colors">&times;</button>
+      </div>
+      <div class="flex-1 overflow-auto bg-black/10 custom-scrollbar" id="modal-log-content"></div>
+      <div class="px-6 py-4 border-t border-white/5 flex justify-end space-x-3 bg-gray-900/20">
+        <button id="btn-download-file" class="px-4 py-2 text-[10px] font-bold uppercase tracking-wider bg-indigo-600 hover:bg-indigo-500 rounded text-white transition-colors">Download .csv</button>
+        <button id="btn-clear-file" class="px-4 py-2 text-[10px] font-bold uppercase tracking-wider border border-rose-500/20 text-rose-400 hover:bg-rose-500/10 rounded transition-colors">Wipe File</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

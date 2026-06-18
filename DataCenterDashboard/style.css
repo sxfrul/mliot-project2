@@ -1,0 +1,71 @@
+.glass-panel {
+  background: rgba(14, 20, 32, 0.8);
+}
+
+.dashboard-card {
+  background: linear-gradient(135deg, rgba(18, 26, 44, 0.5) 0%, rgba(24, 36, 58, 0.2) 100%);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.dashboard-card:hover {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(18, 26, 44, 0.6) 0%, rgba(24, 36, 58, 0.3) 100%);
+}
+
+.card-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #4b5563;
+  margin-left: 0.25rem;
+  margin-bottom: 0.35rem;
+  display: block;
+}
+
+.sidebar-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  display: block;
+}
+
+.card-watermark {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 0.5rem;
+  font-size: 3.5rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.02);
+  user-select: none;
+  pointer-events: none;
+  transition: color 0.3s ease;
+}
+
+.watermark-safe-green {
+  color: rgba(16, 185, 129, 0.04);
+}
+
+.watermark-alert-red {
+  color: rgba(244, 63, 94, 0.12);
+}
+
+.watermark-alert-blue {
+  color: rgba(56, 189, 248, 0.12);
+}
+
+.actuator-badge {
+  border-radius: 4px;
+}
+
+.badge-off {
+  background-color: rgba(24, 36, 58, 0.6);
+  color: #6b7280;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.04); border-radius: 4px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.1); }
