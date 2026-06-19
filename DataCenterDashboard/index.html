@@ -13,8 +13,8 @@
 
   <header class="glass-panel border-b border-white/5 px-8 py-4 flex justify-between items-center z-10 relative">
     <div>
-      <h1 class="text-xl font-bold tracking-tight text-white">ML-IOT :: INTELLIGENT DATA CENTER AI DASHBOARD</h1>
-      <p class="text-[10px] text-gray-400 uppercase tracking-widest font-medium">Autonomous Environment Balance Engine</p>
+      <h1 class="text-xl font-bold tracking-tight text-white">INTELLIGENT DATA CENTER MANAGER</h1>
+      <p class="text-[10px] text-gray-400 uppercase tracking-widest font-medium">Monitoring & Control System</p>
     </div>
     
     <div class="flex items-center space-x-4 text-[11px] font-mono text-gray-400">
@@ -94,24 +94,25 @@
     </div>
 
     <div class="col-span-3 flex flex-col gap-4 overflow-hidden">
+      
       <div class="flex flex-col">
-        <span class="sidebar-label text-indigo-400 mb-1.5">Internal Simulator</span>
-        <section class="dashboard-card border border-white/5 p-4 rounded-lg flex flex-col justify-center">
+        <span class="sidebar-label text-indigo-400 mb-1.5">Pipeline Control Matrix</span>
+        <section class="dashboard-card border border-white/5 p-4 rounded-lg flex flex-col gap-3">
+          
           <button id="btn-fake" class="w-full btn-gradient bg-indigo-600 hover:bg-indigo-500 text-white py-2.5 rounded text-xs font-semibold tracking-wider transition-colors">
               Start Simulation Stream
           </button>
-        </section>
-      </div>
+          
+          <div class="h-[1px] bg-white/5 my-0.5"></div>
 
-      <div class="flex flex-col">
-        <span class="sidebar-label text-gray-400 mb-1.5">Network Pipeline</span>
-        <section class="dashboard-card border border-white/5 p-4 rounded-lg flex flex-col gap-2.5">
-          <button id="btn-toggle" class="btn-cyber text-xs border border-white/10 hover:bg-white/5 text-gray-300 py-2.5 rounded font-semibold tracking-wider transition-colors">
+          <button id="btn-toggle" class="w-full btn-cyber text-xs border border-white/10 hover:bg-white/5 text-gray-300 py-2.5 rounded font-semibold tracking-wider transition-colors">
             <span>ESTABLISH MQTT LINK</span>
           </button>
-          <button id="btn-view-logs" class="btn-cyber text-xs border border-emerald-500/20 hover:bg-emerald-500/10 text-emerald-400 py-2.5 rounded font-semibold tracking-wider transition-colors">
+          
+          <button id="btn-view-logs" class="w-full btn-cyber text-xs border border-emerald-500/20 hover:bg-emerald-500/10 text-emerald-400 py-2.5 rounded font-semibold tracking-wider transition-colors">
             VIEW SAVED LOG FILE
           </button>
+          
         </section>
       </div>
 
@@ -125,7 +126,11 @@
       </div>
     </div>
 
-    <footer class="absolute bottom-0 left-0 w-full bg-[#070a12]/90 border-t border-white/5 px-8 py-3 flex justify-end items-center text-xs font-mono tracking-wider z-30">
+    <footer class="absolute bottom-0 left-0 w-full bg-[#070a12]/90 border-t border-white/5 px-8 py-3 flex justify-between items-center text-xs font-mono tracking-wider z-30">
+      <div class="text-indigo-400 font-bold text-[11px] uppercase tracking-widest flex items-center">
+        Course Code: <span class="text-white ml-1.5 font-semibold">SAIA 3353</span>
+      </div>
+
       <div class="flex items-center space-x-4 text-gray-300 font-bold">
         <div class="text-gray-500 font-semibold text-[11px] tracking-wide uppercase">SYSTEM DEVELOPMENT COHORT:</div>
         <div class="flex items-center space-x-2">
@@ -137,7 +142,7 @@
         <div class="text-gray-700">|</div>
         <div>Jagadesh</div>
         <div class="text-gray-700">|</div>
-        <div>Ryan Ang</div>
+        <div>Ryan Ang Jun Yau</div>
         <div class="text-gray-700">|</div>
         <div>Laila Suhaila</div>
         <div class="text-gray-700">|</div>
